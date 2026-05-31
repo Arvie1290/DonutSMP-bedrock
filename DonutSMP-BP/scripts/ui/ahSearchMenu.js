@@ -44,8 +44,7 @@ export async function openSearchMenu(
     const keyword =
         String(
             searchResult.formValues[0]
-        )
-        .trim();
+        ).trim();
 
     if (!keyword) {
         player.sendMessage(
@@ -82,15 +81,15 @@ export async function openSearchMenu(
         const item =
             listing.item;
 
-        const name =
-            item.nameTag ||
+        const itemName =
+            item.nameTag?.trim() ||
             item.typeId.replace(
                 "minecraft:",
                 ""
             );
 
         resultForm.button(
-            `${name}\n§a$${formatPrice(
+            `${itemName}\n§a$${formatPrice(
                 listing.price
             )}`
         );
@@ -116,7 +115,7 @@ export async function openSearchMenu(
         return;
     }
 
-    openBuyMenu(
+    await openBuyMenu(
         player,
         listing
     );

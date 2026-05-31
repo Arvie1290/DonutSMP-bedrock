@@ -1,151 +1,60 @@
-import {
-    ActionFormData
-} from "@minecraft/server-ui";
+import { ActionFormData } from "@minecraft/server-ui";
+import { getActiveListings } from "../auction/listingManager.js";
+import { getPageItems, getMaxPage, normalizePage } from "../auction/pageManager.js";
+import { formatPrice } from "../utils/priceParser.js";
+import { openYourItemsMenu } from "./ahYourItemsMenu.js";
+import { openSearchMenu } from "./ahSearchMenu.js";
+import { openBuyMenu } from "./ahBuyMenu.js";
 
-import {
-    getActiveListings
-} from "../auction/listingManager.js";
+export async function openAHMenu(player, page = 1) {
+    const listings = getActiveListings();
 
-import {
-    getPageItems,
-    getMaxPage,
-    normalizePage
-} from "../auction/pageManager.js";
+    page = normalizePage(listings, page);
+    const maxPage = getMaxPage(listings);
+    const pageItems = getPageItems(listings, page);
 
-import {
-    formatPrice
-} from "../utils/priceParser.js";
+    const form = new ActionFormData();
+    form.title("Auction House");
 
-export async function openAHMenu(
-    player,
-    page = 1
-) {
-    const listings =
-        getActiveListings();
+    form.button("§bYour item");
+    form.button("§eSearch item");
+    form.button("§aRefresh");
+    form.button(`§7Page: ${page}/${maxPage}`);
 
-    page =
-        normalizePage(
-            listings,
-            page
-        );
-
-    const maxPage =
-        getMaxPage(
-            listings
-        );
-
-    const pageItems =
-        getPageItems(
-            listings,
-            page
-        );
-
-    const form =
-        new ActionFormData();
-
-    form.title(
-        "Auction House"
-    );
-
-    form.button(
-        "§bYour Items"
-    );
-
-    form.button(
-        "§eSearch Item"
-    );
-
-    form.button(
-        "§aRefresh"
-    );
-
-    form.button(
-        `§7Page: ${page}/${maxPage}`
-    );
-
-    for (
-        const listing
-        of pageItems
-    ) {
-        const item =
-            listing.item;
-
-        const name =
-            item.nameTag ||
-            item.typeId.replace(
-                "minecraft:",
-                ""
-            );
-
-        form.button(
-            `§f${name}\n§a$${formatPrice(
-                listing.price
-            )}`
-        );
+    for (const listing of pageItems) {
+        const item = listing.item;
+        const name = item?.nameTag?.trim() || item?.typeId?.replace("minecraft:", "") || "Unknown";
+        form.button(`§f${name}\n§a$${formatPrice(listing.price)}`);
     }
 
-    const result =
-        await form.show(
-            player
-        );
+    const result = await form.show(player);
+    if (result.canceled) return;
 
-    if (
-        result.canceled
-    ) {
+    const selection = result.selection;
+
+    if (selection === 0) {
+        await openYourItemsMenu(player);
         return;
     }
 
-    const selection =
-        result.selection;
-
-    switch (
-        selection
-    ) {
-        case 0:
-            player.sendMessage(
-                "TODO: Your Items Menu"
-            );
-            return;
-
-        case 1:
-            player.sendMessage(
-                "TODO: Search Menu"
-            );
-            return;
-
-        case 2:
-            openAHMenu(
-                player,
-                page
-            );
-            return;
-
-        case 3:
-            openAHMenu(
-                player,
-                page + 1
-            );
-            return;
-    }
-
-    const listing =
-        pageItems[
-            selection - 4
-        ];
-
-    if (!listing) {
+    if (selection === 1) {
+        await openSearchMenu(player);
         return;
     }
 
-    player.sendMessage(
-        `Selected: ${listing.id}`
-    );
+    if (selection === 2) {
+        await openAHMenu(player, page);
+        return;
+    }
 
-    /*
-    nanti:
-    openBuyMenu(
-        player,
-        listing
-    );
-    */
+    if (selection === 3) {
+        const nextPage = page >= maxPage ? 1 : page + 1;
+        await openAHMenu(player, nextPage);
+        return;
+    }
+
+    const listing = pageItems[selection - 4];
+    if (!listing) return;
+
+    await openBuyMenu(player, listing);
 }

@@ -1,7 +1,29 @@
-// Auction House Main Command
-import { ahMainMenu } from '../ui/ahMainMenu';
+import {
+    world
+} from "@minecraft/server";
 
-export function ahCommand(event) {
-  const player = event.sender;
-  ahMainMenu(player);
-}
+import {
+    openAHMenu
+} from "../ui/ahMainMenu.js";
+
+world.beforeEvents.chatSend.subscribe(
+    (event) => {
+        const {
+            sender,
+            message
+        } = event;
+
+        if (
+            message !== "/ah"
+        ) {
+            return;
+        }
+
+        event.cancel = true;
+
+        openAHMenu(
+            sender,
+            1
+        );
+    }
+);

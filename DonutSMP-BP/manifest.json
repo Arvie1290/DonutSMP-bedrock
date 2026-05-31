@@ -1,18 +1,29 @@
 {
   "format_version": 2,
   "header": {
-    "description": "DonutSMP Bedrock Addon",
     "name": "DonutSMP",
-    "uuid": "00000000-0000-0000-0000-000000000000",
-    "version": [1, 0, 0]
+    "description": "Add command & logic like on DonutSMP",
+    "uuid": "7a8a7f0d-4dbe-4a6f-a9a8-fc2b57d0e14f",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 100]
   },
   "modules": [
     {
-      "description": "Script Module",
       "type": "script",
-      "uuid": "00000000-0000-0000-0000-000000000001",
-      "version": [1, 0, 0],
-      "entry": "scripts/main.js"
+      "language": "javascript",
+      "uuid": "c1d8d67f-1f85-42f4-9c1e-b3b2b0a7e96f",
+      "entry": "scripts/main.js",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.0.0"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.0.0"
     }
   ]
 }

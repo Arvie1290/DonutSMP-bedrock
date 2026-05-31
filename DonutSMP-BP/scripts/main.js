@@ -1,17 +1,11 @@
-// DonutSMP Main Script
-import { world } from '@minecraft/server';
-import { ahCommand } from './commands/ahCommand';
-import { sellCommand } from './commands/sellCommand';
+/**
+ * DonutSMP
+ * Main Entry
+ */
 
-// Initialize auction house
-world.afterEvents.chatSend.subscribe((event) => {
-  const message = event.message.toLowerCase();
-  
-  if (message.startsWith('/ah ')) {
-    ahCommand(event);
-  } else if (message.startsWith('/sell ')) {
-    sellCommand(event);
-  }
-});
+import "./commands/ahCommand.js";
+import "./commands/sellCommand.js";
 
-console.warn('DonutSMP Auction House Loaded!');
+import "./auction/expireManager.js";
+
+console.warn("[DonutSMP] Loaded successfully.");

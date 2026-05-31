@@ -3,7 +3,7 @@
   "header": {
     "name": "DonutSMP",
     "description": "Add command & logic like on DonutSMP",
-    "uuid": "7a8a7f0d-4dbe-4a6f-a9a8-fc2b57d0e14f",
+    "uuid": "f3d4b7d2-2f8a-4f0d-8f5a-6e2a6d0d9a11",
     "version": [1, 0, 0],
     "min_engine_version": [1, 21, 100]
   },
@@ -11,7 +11,7 @@
     {
       "type": "script",
       "language": "javascript",
-      "uuid": "c1d8d67f-1f85-42f4-9c1e-b3b2b0a7e96f",
+      "uuid": "0a9c7e51-8b66-4f3d-a1b5-3f8c1d2d4c77",
       "entry": "scripts/main.js",
       "version": [1, 0, 0]
     }

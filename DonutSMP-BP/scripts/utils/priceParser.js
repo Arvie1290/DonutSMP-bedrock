@@ -1,63 +1,50 @@
-/**
- * Convert:
- * 10   -> 10
- * 10k  -> 10000
- * 10m  -> 10000000
- * 10b  -> 1000000000
- */
-
 export function parsePrice(input) {
-    if (!input) return null;
+    if (input === undefined || input === null) return null;
 
-    const text = String(input)
-        .trim()
-        .toLowerCase();
+    const text = String(input).trim().toLowerCase();
+    if (!text) return null;
 
     const match = text.match(/^(\d+)([kmb]?)$/);
-
-    if (!match) {
-        return null;
-    }
+    if (!match) return null;
 
     const value = Number(match[1]);
     const suffix = match[2];
 
+    if (Number.isNaN(value)) return null;
+
     switch (suffix) {
         case "k":
             return value * 1_000;
-
         case "m":
             return value * 1_000_000;
-
         case "b":
             return value * 1_000_000_000;
-
         default:
             return value;
     }
 }
 
-/**
- * Convert:
- * 10000 -> 10k
- * 10000000 -> 10m
- * 1000000000 -> 1b
- */
-
 export function formatPrice(amount) {
-    amount = Number(amount);
+    const value = Number(amount);
 
-    if (amount >= 1_000_000_000) {
-        return `${amount / 1_000_000_000}b`;
+    if (!Number.isFinite(value) || value < 0) {
+        return "0";
     }
 
-    if (amount >= 1_000_000) {
-        return `${amount / 1_000_000}m`;
+    if (value >= 1_000_000_000) {
+        const num = value / 1_000_000_000;
+        return Number.isInteger(num) ? `${num}b` : `${num.toFixed(2).replace(/\.00$/, "")}b`;
     }
 
-    if (amount >= 1_000) {
-        return `${amount / 1_000}k`;
+    if (value >= 1_000_000) {
+        const num = value / 1_000_000;
+        return Number.isInteger(num) ? `${num}m` : `${num.toFixed(2).replace(/\.00$/, "")}m`;
     }
 
-    return String(amount);
+    if (value >= 1_000) {
+        const num = value / 1_000;
+        return Number.isInteger(num) ? `${num}k` : `${num.toFixed(2).replace(/\.00$/, "")}k`;
+    }
+
+    return `${value}`;
 }

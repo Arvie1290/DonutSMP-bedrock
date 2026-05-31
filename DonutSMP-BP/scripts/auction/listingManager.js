@@ -80,3 +80,45 @@ export function getPlayerListings(
         .filter(
             listing =>
                 listing.seller ===
+                playerName
+        );
+}
+
+export function getActiveListings() {
+    return getListings()
+        .filter(
+            listing =>
+                !listing.sold
+        );
+}
+
+export function getExpiredListings() {
+    const now =
+        Date.now();
+
+    return getListings()
+        .filter(
+            listing =>
+                !listing.sold &&
+                listing.expiredAt <=
+                now
+        );
+}
+
+export function searchListings(
+    keyword
+) {
+    keyword =
+        keyword.toLowerCase();
+
+    return getListings()
+        .filter(
+            listing =>
+                listing.item
+                    ?.typeId
+                    ?.toLowerCase()
+                    ?.includes(
+                        keyword
+                    )
+        );
+}
